@@ -60,3 +60,49 @@ Cliente HTTP -> PedidoController -> PedidoProducer -> ActiveMQ Artemis -> Pedido
 Neste projeto, a fila `pedidos` nao esta declarada explicitamente no broker Artemis. Para desenvolvimento local, o projeto depende da auto-criacao do broker.
 
 A explicacao completa e as implicacoes para producao estao em `ARCHITECTURE.md`.
+
+## Queue vs Topic
+
+### Queue: Point-to-Point
+
+Uma Queue representa comunicacao ponto a ponto. Quando uma mensagem e enviada para uma queue, apenas um consumidor deve processar aquela mensagem.
+
+Neste projeto, `POST /pedidos` usa a queue `pedidos`:
+
+```text
+POST /pedidos -> Queue pedidos -> PedidoConsumer
+```
+
+Esse modelo e indicado para comandos ou tarefas que devem ser executadas uma unica vez.
+
+### Topic: Publish/Subscribe
+
+Um Topic representa comunicacao por publicacao e assinatura. Quando uma mensagem e publicada em um topic, varios consumidores independentes podem receber a mesma mensagem.
+
+Neste projeto, `POST /pedidos/evento` usa o topic `pedido-criado`:
+
+```text
+POST /pedidos/evento -> Topic pedido-criado -> PedidoEmailConsumer
+                                           -> PedidoAuditoriaConsumer
+```
+
+Esse modelo e indicado para eventos que precisam ser observados por mais de uma parte do sistema.
+
+## Publicar Evento de Pedido Criado
+
+```bash
+curl -X POST http://localhost:8080/pedidos/evento \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": 1,
+    "cliente": "Luis",
+    "valor": 100.00
+  }'
+```
+
+O endpoint retorna `202 Accepted`. A mensagem e publicada no topic `pedido-criado` e deve ser recebida pelos dois consumers:
+
+```text
+[EMAIL] Pedido recebido: 1
+[AUDITORIA] Pedido recebido: 1
+```

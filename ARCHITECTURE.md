@@ -135,3 +135,70 @@ Exemplo conceitual de declaracao no Artemis:
 ```
 
 Para JMS queue no Artemis, `anycast` e o tipo de roteamento apropriado.
+
+## Fluxo Publish/Subscribe com Topic
+
+A aplicacao tambem suporta publicacao de evento de pedido criado em um JMS Topic.
+
+Fluxo:
+
+```text
+Cliente HTTP -> PedidoController -> PedidoEventoService -> PedidoEventoProducer -> Topic pedido-criado
+                                                                        |-> PedidoEmailConsumer
+                                                                        |-> PedidoAuditoriaConsumer
+```
+
+## Componentes do Fluxo de Topic
+
+### Endpoint `POST /pedidos/evento`
+
+Recebe um `PedidoRequest` e delega a publicacao do evento para `PedidoEventoService`.
+
+### PedidoEventoService
+
+Orquestra a publicacao do evento sem misturar a responsabilidade HTTP com a responsabilidade JMS.
+
+### PedidoEventoProducer
+
+Serializa o `PedidoRequest` em JSON e publica no topic configurado em `app.jms.topics.pedido-criado`.
+
+### PedidoEmailConsumer
+
+Assina o topic `pedido-criado` e simula envio de email registrando:
+
+```text
+[EMAIL] Pedido recebido: {id}
+```
+
+### PedidoAuditoriaConsumer
+
+Assina o topic `pedido-criado` e simula auditoria registrando:
+
+```text
+[AUDITORIA] Pedido recebido: {id}
+```
+
+## Queue vs Topic
+
+Queue usa o modelo Point-to-Point:
+
+- Uma mensagem enviada para uma queue e entregue para um unico consumidor daquela queue.
+- E adequada para processamento de comandos ou tarefas que devem ser executadas uma unica vez.
+- O fluxo existente `POST /pedidos` usa a queue `pedidos`.
+
+Topic usa o modelo Publish/Subscribe:
+
+- Uma mensagem publicada em um topic pode ser entregue para varios assinantes independentes.
+- E adequada para eventos que precisam ser observados por diferentes partes do sistema.
+- O novo fluxo `POST /pedidos/evento` usa o topic `pedido-criado`.
+
+## Configuracao JMS Para Coexistencia
+
+A configuracao global permanece com `spring.jms.pub-sub-domain: false` para preservar o comportamento de Queue.
+
+Para Topic, o projeto define configuracao dedicada:
+
+- `topicJmsTemplate`: publica mensagens com `pubSubDomain=true`.
+- `topicJmsListenerContainerFactory`: executa listeners em modo Topic com `pubSubDomain=true`.
+
+Essa separacao permite que Queue e Topic coexistam sem alterar o comportamento da queue `pedidos`.

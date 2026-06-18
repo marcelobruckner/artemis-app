@@ -16,3 +16,5 @@ app:
   jms:
     queues:
       pedidos: pedidos
+    topics:
+      pedido-criado: pedido-criado

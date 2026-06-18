@@ -79,3 +79,47 @@ Resposta esperada:
 - A aplicacao sobe com `mvn spring-boot:run`.
 - Uma chamada para `POST /pedidos` publica uma mensagem na fila de pedidos.
 - O consumer consome a mensagem e registra o pedido nos logs.
+
+## Incremento: Evento de Pedido Criado via Topic
+
+### Objetivo
+
+Adicionar comunicacao Publish/Subscribe usando JMS Topic no ActiveMQ Artemis, sem alterar o fluxo existente baseado em Queue.
+
+### Requisitos Funcionais
+
+- A API deve expor o endpoint `POST /pedidos/evento`.
+- O endpoint deve receber o mesmo payload de pedido usado em `POST /pedidos`.
+- A aplicacao deve publicar o evento no topic `pedido-criado`.
+- A aplicacao deve possuir um consumer independente para simular envio de email.
+- A aplicacao deve possuir um consumer independente para simular auditoria.
+- Ambos os consumers devem receber a mesma mensagem publicada no topic.
+- O fluxo existente `POST /pedidos` com queue `pedidos` deve continuar funcionando sem alteracao de comportamento.
+
+### Contrato da API
+
+`POST /pedidos/evento`
+
+Payload:
+
+```json
+{
+  "id": 1,
+  "cliente": "Luis",
+  "valor": 100.00
+}
+```
+
+Resposta esperada:
+
+```text
+202 Accepted
+```
+
+### Criterios de Aceite
+
+- Uma chamada para `POST /pedidos/evento` publica uma mensagem no topic `pedido-criado`.
+- `PedidoEmailConsumer` registra `[EMAIL] Pedido recebido: {id}`.
+- `PedidoAuditoriaConsumer` registra `[AUDITORIA] Pedido recebido: {id}`.
+- Os dois consumers recebem a mesma mensagem do evento.
+- A funcionalidade existente de queue `pedidos` permanece inalterada.
