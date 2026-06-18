@@ -46,6 +46,6 @@ O endpoint retorna `202 Accepted`. A mensagem é publicada na fila `pedidos` e c
 ## Arquitetura
 
 - `POST /pedidos`: recebe um `PedidoRequest`.
-- `PedidoProducer`: serializa o pedido em JSON e envia para a queue `pedidos`.
-- `PedidoConsumer`: consome mensagens da queue `pedidos` com `@JmsListener`.
-- `application.yml`: configura conexão nativa com ActiveMQ Artemis em `localhost:61616`.
+- `PedidoProducer`: serializa o pedido em JSON e envia para a queue configurada em `app.jms.queues.pedidos`.
+- `PedidoConsumer`: consome mensagens da queue configurada em `app.jms.queues.pedidos` com `@JmsListener`.
+- `application.yml`: configura conexão nativa com ActiveMQ Artemis em `localhost:61616` e define a fila `pedidos`.

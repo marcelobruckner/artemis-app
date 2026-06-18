@@ -19,7 +19,7 @@ public class PedidoConsumer {
         this.objectMapper = objectMapper;
     }
 
-    @JmsListener(destination = "pedidos")
+    @JmsListener(destination = "${app.jms.queues.pedidos}")
     public void consumir(String mensagem) {
         try {
             PedidoRequest pedidoRequest = objectMapper.readValue(mensagem, PedidoRequest.class);
