@@ -2,7 +2,7 @@ package com.example.artemisapp.controller;
 
 import com.example.artemisapp.dto.PedidoRequest;
 import com.example.artemisapp.service.PedidoEventoService;
-import com.example.artemisapp.service.PedidoProducer;
+import com.example.artemisapp.service.PedidoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,18 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/pedidos")
 public class PedidoController {
 
-    private final PedidoProducer pedidoProducer;
+    private final PedidoService pedidoService;
     private final PedidoEventoService pedidoEventoService;
 
-    public PedidoController(PedidoProducer pedidoProducer, PedidoEventoService pedidoEventoService) {
-        this.pedidoProducer = pedidoProducer;
+    public PedidoController(PedidoService pedidoService, PedidoEventoService pedidoEventoService) {
+        this.pedidoService = pedidoService;
         this.pedidoEventoService = pedidoEventoService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void criarPedido(@RequestBody PedidoRequest pedidoRequest) {
-        pedidoProducer.enviar(pedidoRequest);
+        pedidoService.criarPedido(pedidoRequest);
     }
 
     @PostMapping("/evento")

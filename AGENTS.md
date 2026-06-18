@@ -31,4 +31,6 @@ API Spring Boot com Java 21 que demonstra dois modelos JMS com ActiveMQ Artemis:
 - O topic `pedido-criado` tambem depende da configuracao local do Artemis para desenvolvimento.
 - O projeto usa auto-criacao do Artemis para desenvolvimento local. Essa decisao esta documentada em `ARCHITECTURE.md` e nao deve ser alterada sem pedido explicito do usuario.
 - A funcionalidade de Queue deve continuar independente da funcionalidade de Topic.
+- Seguir o fluxo `Controller -> Service -> Producer/Consumer`.
+- Manter todos os producers no pacote `producer` e todos os consumers no pacote `consumer`.
 - Nao alterar o comportamento de `POST /pedidos`, `PedidoProducer` ou `PedidoConsumer` ao evoluir o fluxo Publish/Subscribe.

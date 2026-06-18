@@ -1,4 +1,4 @@
-package com.example.artemisapp.service;
+package com.example.artemisapp.consumer;
 
 import com.example.artemisapp.dto.PedidoRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -10,13 +10,26 @@ Fluxo principal:
 Cliente HTTP -> PedidoController -> PedidoProducer -> ActiveMQ Artemis -> PedidoConsumer -> Logs
 ```
 
+## Organizacao de Pacotes
+
+- `controller`: endpoints HTTP e delegacao para services.
+- `service`: orquestracao de casos de uso, sem detalhes diretos de listener JMS.
+- `producer`: componentes responsaveis por publicar mensagens JMS.
+- `consumer`: componentes responsaveis por consumir mensagens JMS.
+- `dto`: contratos de entrada e transferencia de dados.
+- `config`: configuracoes tecnicas de infraestrutura, como templates JMS.
+
 ## Componentes
 
 ### PedidoController
 
 Responsavel por expor o endpoint `POST /pedidos`.
 
-Recebe o payload HTTP como `PedidoRequest` e delega o envio da mensagem para `PedidoProducer`.
+Recebe o payload HTTP como `PedidoRequest` e delega a execucao para `PedidoService` ou `PedidoEventoService`.
+
+### PedidoService
+
+Orquestra o fluxo de Queue para `POST /pedidos` e delega a publicacao da mensagem para `PedidoProducer`.
 
 ### PedidoRequest
 
