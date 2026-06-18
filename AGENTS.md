@@ -1,33 +1,29 @@
-# Contexto do Projeto
+# Contexto Para Agentes
 
-Este projeto e uma API Spring Boot com Java 21 que publica e consome mensagens JMS em um broker ActiveMQ Artemis local.
+Este arquivo deve ser lido antes de alterar o projeto. Ele contem instrucoes operacionais e aponta para a documentacao de produto e arquitetura.
 
-## Stack
+## Documentos Fonte
 
-- Java 21
-- Spring Boot
-- Spring Web
-- Spring JMS com ActiveMQ Artemis
-- Maven
-- Docker Compose
+- `PRD.md`: objetivo, escopo, requisitos funcionais, requisitos tecnicos e criterios de aceite.
+- `ARCHITECTURE.md`: componentes, fluxo tecnico, configuracao JMS, decisao sobre a fila Artemis e recomendacoes de producao.
+- `README.md`: instrucoes praticas para executar o projeto localmente.
 
-## Comportamento da Aplicacao
+## Resumo do Projeto
 
-- O endpoint `POST /pedidos` recebe um `PedidoRequest` com `id`, `cliente` e `valor`.
-- `PedidoProducer` serializa o pedido em JSON e envia para a fila configurada em `app.jms.queues.pedidos`.
-- `PedidoConsumer` consome mensagens da mesma fila usando `@JmsListener`.
-- O broker Artemis local fica em `tcp://localhost:61616`.
+API Spring Boot com Java 21 que recebe pedidos via `POST /pedidos`, publica mensagens JMS em ActiveMQ Artemis e consome mensagens da mesma fila para demonstrar o fluxo ponta a ponta.
 
-## Decisao Sobre a Fila
-
-A fila `pedidos` nao esta declarada explicitamente no broker Artemis neste projeto.
-
-Para desenvolvimento local, o projeto depende da auto-criacao do Artemis quando a aplicacao publica ou consome a destination `pedidos`.
-
-Em producao, a abordagem correta seria provisionar a fila no broker ou na infraestrutura e evitar depender de auto-criacao.
-
-## Convencoes
+## Convencoes de Trabalho
 
 - Mensagens de commit devem ser sempre em portugues.
-- Manter o projeto simples e didatico, sem adicionar configuracoes de producao se o usuario nao pedir explicitamente.
-- Preferir explicar a diferenca entre configuracao da aplicacao e configuracao do broker quando o assunto for JMS/Artemis.
+- Manter o projeto simples e didatico, salvo pedido explicito para endurecer a configuracao.
+- Nao transformar a configuracao local em uma arquitetura de producao sem solicitacao explicita.
+- Preferir Maven para validacao: `mvn test`.
+- Se alterar comportamento, atualizar `PRD.md` quando mudar requisito ou escopo.
+- Se alterar desenho tecnico, fluxo, configuracao JMS ou decisoes sobre Artemis, atualizar `ARCHITECTURE.md`.
+- Se alterar instrucoes de execucao local, atualizar `README.md`.
+
+## Decisao Importante Ja Tomada
+
+A fila `pedidos` nao e provisionada explicitamente no broker neste projeto.
+
+O projeto usa auto-criacao do Artemis para desenvolvimento local. Essa decisao esta documentada em `ARCHITECTURE.md` e nao deve ser alterada sem pedido explicito do usuario.
