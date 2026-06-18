@@ -198,7 +198,8 @@ A configuracao global permanece com `spring.jms.pub-sub-domain: false` para pres
 
 Para Topic, o projeto define configuracao dedicada:
 
-- `topicJmsTemplate`: publica mensagens com `pubSubDomain=true`.
+- `jmsTemplate`: template primario em modo Queue com `pubSubDomain=false`, usado pelo fluxo `POST /pedidos`.
+- `topicJmsTemplate`: publica mensagens com `pubSubDomain=true`, usado pelo fluxo `POST /pedidos/evento`.
 - `topicJmsListenerContainerFactory`: executa listeners em modo Topic com `pubSubDomain=true`.
 
 Essa separacao permite que Queue e Topic coexistam sem alterar o comportamento da queue `pedidos`.
