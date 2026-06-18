@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: artemis-app
+  artemis:
+    mode: native
+    broker-url: tcp://localhost:61616
+    user: artemis
+    password: artemis
+  jms:
+    pub-sub-domain: false
+
+server:
+  port: 8080
