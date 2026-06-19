@@ -7,6 +7,7 @@ Este arquivo deve ser lido antes de alterar o projeto. Ele contem instrucoes ope
 - `PRD.md`: objetivo, escopo, requisitos funcionais, requisitos tecnicos e criterios de aceite.
 - `ARCHITECTURE.md`: componentes, fluxos tecnicos, configuracao JMS, Queue vs Topic e decisoes sobre Artemis.
 - `README.md`: instrucoes praticas para executar e testar o projeto localmente.
+- `TODO.md`: backlog tecnico com evolucoes planejadas, incluindo DLQ, Retry e tratamento de falhas.
 
 ## Resumo do Projeto
 

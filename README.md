@@ -7,6 +7,7 @@ API de pedidos criada com Spring Boot, Java 21, Spring Web e Spring JMS para pub
 - `PRD.md`: objetivo, escopo, requisitos e criterios de aceite.
 - `ARCHITECTURE.md`: arquitetura, fluxo JMS, configuracao da fila e decisoes tecnicas.
 - `AGENTS.md`: contexto operacional para agentes e convencoes do projeto.
+- `TODO.md`: backlog tecnico com evolucoes planejadas.
 
 ## Requisitos
 
